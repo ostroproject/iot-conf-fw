@@ -52,8 +52,8 @@ function saveForm(resource, name) {
 }
 
 function getRestURL(resource) {
-    var host = window.location.host.split(":")[0]
-    return "http://" + host + ":4984/confs" + resource;
+    var origin = window.location.origin.split(":")
+    return origin[0] + ":" + origin[1] + ":4984/confs" + resource;
 }
 
 function parseValues(values, prefix) {

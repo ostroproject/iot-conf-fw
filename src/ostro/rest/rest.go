@@ -42,7 +42,7 @@ var (
 )
 
 
-func NewFileHandler(addr string, port int, pattern, prefix, tmpdir string) error {
+func NewFileHandler(addr string, port int, pattern, prefix, tmpdir, certFile, keyFile string) error {
 	if fileHandler == nil {
 		log.Printf("checking '%s'\n", tmpdir)
 		if err := os.MkdirAll(filepath.Dir(tmpdir), 0755); err != nil {
@@ -66,7 +66,11 @@ func NewFileHandler(addr string, port int, pattern, prefix, tmpdir string) error
 		srv.SetKeepAlivesEnabled(false)
 
 		go func(s *http.Server) {
-			log.Print(s.ListenAndServe())
+      if certFile == "" || keyFile == "" {
+        log.Print(s.ListenAndServe())
+      } else {
+        log.Print(s.ListenAndServeTLS(certFile, keyFile))
+      }
 		}(srv)
 	} else {
 		pat := strings.TrimRight(pattern, "/")

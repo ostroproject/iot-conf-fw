@@ -37,7 +37,7 @@ type Server struct {
 	prefix string
 }
 
-func NewServer(addr string, port int, pattern, prefix string) error {
+func NewServer(addr string, port int, pattern, prefix, certFile, keyFile string) error {
 	if uiServer == nil {
 		uiServer = &Server{
 			addr: addr,
@@ -54,7 +54,11 @@ func NewServer(addr string, port int, pattern, prefix string) error {
 			MaxHeaderBytes: 4096}
 
 		go func(s *http.Server) {
-			log.Print(s.ListenAndServe())
+      if certFile == "" || keyFile == "" {
+        log.Print(s.ListenAndServe())
+      } else {
+        log.Print(s.ListenAndServeTLS(certFile, keyFile))
+      }
 		}(srv)
 	} else {
 		if uiServer.addr != addr || uiServer.port != port || uiServer.pattern != pattern || uiServer.prefix != prefix {
