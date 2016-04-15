@@ -1,10 +1,14 @@
 package confui
 
 import (
+  "crypto/tls"
 	"fmt"
 	"log"
 	"os"
+  "strconv"
 	"strings"
+  "syscall"
+  "net"
 	"net/http"
 )
 
@@ -37,6 +41,30 @@ type Server struct {
 	prefix string
 }
 
+func getListenFds() ([]*os.File, error) {
+  pid, err := strconv.Atoi(os.Getenv("LISTEN_PID"))
+  if err != nil || pid != os.Getpid() {
+    log.Print("Invalid PID set")
+    return nil, err
+  }
+
+  nfds, err := strconv.Atoi(os.Getenv("LISTEN_FDS"))
+  if  err != nil || nfds == 0 {
+    log.Print("No LISTEN_FDS found")
+    return nil, err
+  }
+
+  log.Print("Number of listen FDs : ", nfds)
+
+  files := make([]*os.File, nfds)
+  for fd := 3; fd < 3+nfds; fd++ {
+    syscall.CloseOnExec(fd)
+    files[fd-3] = os.NewFile(uintptr(fd), "")
+  }
+
+  return files, nil
+}
+
 func NewServer(addr string, port int, pattern, prefix, certFile, keyFile string) error {
 	if uiServer == nil {
 		uiServer = &Server{
@@ -48,16 +76,49 @@ func NewServer(addr string, port int, pattern, prefix, certFile, keyFile string)
 		mux := http.NewServeMux()
 		mux.HandleFunc(pattern, httpRequestHandler)
 
+    var ln net.Listener = nil
+    listen_fds, err := getListenFds()
+    if err == nil && len(listen_fds) != 0 {
+      ln, err = net.FileListener(listen_fds[0])
+      if err != nil {
+        fmt.Print(err)
+        ln = nil
+      }
+    } else {
+      log.Print(err);
+    }
+
+    log.Print("Listener : ", ln);
+
+    if ln != nil && certFile != "" && keyFile != "" {
+      cfg := &tls.Config{}
+      cfg.Certificates = make([]tls.Certificate, 1)
+      cfg.Certificates[0], err = tls.LoadX509KeyPair(certFile, keyFile)
+      if err != nil {
+        log.Print(err)
+      } else {
+        ln = tls.NewListener(ln, cfg);
+        if (ln == nil) {
+          log.Fatal("Failed to create tls listener");
+        }
+      }
+    }
+
 		srv := &http.Server{
 			Addr: fmt.Sprintf("%s:%d", addr, port),
 			Handler: mux,
 			MaxHeaderBytes: 4096}
 
 		go func(s *http.Server) {
-      if certFile == "" || keyFile == "" {
-        log.Print(s.ListenAndServe())
-      } else {
+      if ln != nil {
+        log.Print("Serving...");
+        log.Print(s.Serve(ln))
+      } else if certFile != "" && keyFile != "" {
+        log.Print("Listen and Serving with certificates...");
         log.Print(s.ListenAndServeTLS(certFile, keyFile))
+      } else {
+        log.Print("Listen and Serving...");
+        log.Print(s.ListenAndServe())
       }
 		}(srv)
 	} else {
