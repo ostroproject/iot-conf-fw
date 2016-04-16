@@ -7,3 +7,4 @@
 make_go_binary etcdconfs.go
 #make_go_binary neardconfs.go
 make_go_binary restconfs.go
+make_go_binary tarconfs.go
