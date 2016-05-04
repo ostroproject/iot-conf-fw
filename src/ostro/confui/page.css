@@ -1,0 +1,184 @@
+
+div.page {
+    display block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    max-width: 25em;
+    min-width: 15em;
+    width: 100%;
+}
+
+div.left-arrow {
+    width: 0;
+    height: 0;
+    fontsize: 0;
+    border-left: 0.25em solid transparent;
+    border-top: 0.5em solid transparent;
+    border-bottom: 0.5em solid transparent;
+    border-right: 0.5em solid #3f3f3f;
+}
+
+div.right-arrow {
+    width: 0;
+    height: 0;
+    fontsize: 0;
+    border-right: 0;
+    border-top: 0.5em solid transparent;
+    border-bottom: 0.5em solid transparent;
+    border-left: 0.5em solid #3f3f3f;
+}
+
+div.toolbar, div.buttonbar {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    background-color: #dfdfdf;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: 0 0 0 0;
+    width: 100%;
+}
+
+#back-button {
+    display: inline-block;
+}
+
+div.navigator {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: center;
+    align-items: center;
+    width: 100%;
+}
+
+span.navigator {
+    -webkit-box-flex: 0 0;
+    -ms-flex: 0 0;
+    -webkit-flex: 0 0;
+    flex: 0 0;
+}
+
+td.launcher {
+    padding-left: 1em;
+}
+
+div.workarea {
+    display: block;
+    width: 100%;
+}
+
+div.dirlist {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+table.dirlist {
+    -webkit-box-flex: 0 0;
+    -webkit-flex: 0 0;
+    -ms-flex: 0 0;
+    flex: 0 0;
+    top: 0;
+    margin-top: 1em;
+}
+
+form.entry {
+    display: block;
+    width: 100%;
+}
+
+table.entry {
+    -webkit-box-flex: 0 0;
+    -webkit-flex: 0 0;
+    -ms-flex: 0 0;
+    flex: 0 0;
+    max-width: 100%
+}
+
+input.input {
+    max-width: 10em;
+}
+
+td.label1 { padding-left: 1em;  }
+td.label2 { padding-left: 2em;  }
+td.label3 { padding-left: 3em;  }
+
+
+button.buttonbar {
+    -webkit-box-flex: 0 0;
+    -webkit-flex: 0 0;
+    -ms-flex: 0 0;
+    flex: 0 0;
+    margin: 0 0.5em;
+}
+
+div.buttonbar {
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: center;
+    align-items: center;
+    margin-top: 1em;
+}
+
+div.dialogcover {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #c0c0c0;
+    opacity: 0.75;
+}
+
+div.dialog {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+}
+
+div.container {
+#    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+}
+
+div.msgbox {
+    display: block;
+    min-width: 12em;
+    max-width: 95%;
+    background-color: #ffffff;
+    border: 3px solid #303030;
+}
+
+span.message {
+    display: block;
+    margin: 1em;
+}

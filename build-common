@@ -1,0 +1,81 @@
+#!/bin/bash
+
+#set -x
+
+export TOPDIR=`pwd`
+export GOPATH=`pwd`
+export GOBIN=`pwd`/bin
+
+find_go_compiler () {
+    if [ "x$1" != "x" ] ; then
+        list_of_go_compilers=$1
+    else
+        list_of_go_compilers="go gccgo"
+    fi
+
+    echo "list of GOC candidates: $list_of_go_compilers"
+    
+    for g in $list_of_go_compilers ; do
+        which $g || continue
+
+        goc=`which $g`
+        compiler=`basename $goc`
+
+        case $compiler in
+        gccgo)
+            export GOC="$goc -I${GOPATH}/src -c "
+            export GOL="$goc -o $binary"
+            ;;
+        *)
+            export GOC="$goc build -a -installsuffix cgo -ldflags '-extld ld -extldflags -static' -a -x"
+            export GOL=`which true`
+            ;;
+        esac
+
+        echo "$goc will be used for GO compilation"
+
+        return 0
+    done
+
+    echo "can't find compiler for GO"
+    exit 1
+}
+
+make_go_binary () {
+    source=$TOPDIR/$1
+    binary=`basename $source | sed -e s/\.go$//`
+
+    echo "build $binary"
+
+    pushd $GOBIN > /dev/null
+    
+    eval $GOC $source  2> /tmp/${binary}-compilation.log
+    compile_status=$?
+
+    if [ $compile_status != 0 ] ; then
+        echo "failed to compile $binary"
+        echo "***** compilation log ******"
+        echo $GOC $source
+        echo
+        cat /tmp/${binary}-compilation.log
+        exit 1
+    fi
+
+    eval $GOL $source   2> /tmp/${binary}-link.log
+    link_status=$?
+
+    if [ $link_status != 0 -o ! -x $GOBIN/$binary ] ; then
+        echo "failed to link $binary"
+        echo "***** link log ******"
+        echo $GOL $source
+        echo
+        cat /tmp/${binary}-link.log
+        exit 1
+    fi
+
+    popd > /dev/null
+}
+
+find_go_compiler $1
+
+mkdir -p $GOBIN
