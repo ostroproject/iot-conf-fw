@@ -10,3 +10,6 @@
 [submodule "src/golang.org/x/sys"]
 	path = src/golang.org/x/sys
 	url = https://github.com/golang/sys.git
+[submodule "src/golang.org/x/oauth2"]
+	path = src/golang.org/x/oauth2
+	url = https://github.com/golang/oauth2.git
