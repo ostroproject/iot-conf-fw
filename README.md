@@ -1,4 +1,5 @@
 OSTRO Configuration & Management Tools 
 ======================================
 
-Blah blah
+This repository contains the sources of various configuration & management components.
+
