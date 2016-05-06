@@ -15,7 +15,7 @@ func main() {
 
 	flag.IntVar(&restPort, "rest-port", 4984, "REST server port")
 	flag.StringVar(&restPrefixRaw, "rest-prefix", "/confs/local", "REST resource prefix")
-  //flag.StringVar(&dropZoneRootRaw, "drop-zone", "/var/cache/confs", "root of the Drop Zone")
+  flag.StringVar(&dropZoneRootRaw, "cache", "/var/cache/confs", "root of the Drop Zone")
 
 	flag.IntVar(&httpPort, "http-port", 8080, "HTTP server port")
 	flag.StringVar(&httpPrefixRaw, "http-prefix", "/confs", "UI URL prefix")
