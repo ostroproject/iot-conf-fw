@@ -5,6 +5,7 @@ import (
 	"os"
 	"path"
 	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/introspect"
 	"ostro/confs"
 )
 
@@ -23,6 +24,7 @@ type server struct {
 	conn *dbus.Conn
 	rootObject dbus.BusObject
 	neardObject dbus.BusObject
+	dbusInterface *introspect.Node
 	address string
 	events []string
 	sigchan <-chan *dbus.Signal
@@ -79,6 +81,7 @@ func NewServer(events []string) *Server {
 				address := "org.neard"
 				rootObject := conn.Object(address, dbus.ObjectPath("/"))
 				neardObject := conn.Object(address, dbus.ObjectPath("/org/neard"))
+				dbusInterface, _ := introspect.Call(neardObject)
 				
 				conn.BusObject().Call("org.freedesktop.DBus.AddMatch", 0, interfacesAddedFilter)
 				
@@ -92,6 +95,7 @@ func NewServer(events []string) *Server {
 					conn: conn,
 					rootObject: rootObject,
 					neardObject: neardObject,
+					dbusInterface: dbusInterface,
 					address: address,
 					events: events,
 					sigchan: sigchan,
