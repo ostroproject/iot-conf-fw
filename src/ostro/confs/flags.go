@@ -25,6 +25,10 @@ var (
 	tmpDir      = "/var/cache/confs/tmp"
 	defRoot     = "/usr/share/confs/ui"
 	subTrees    = map[string]bool{"local":true, "common":true}
+	checkOrigin = false
+	allowOrigin = map[string]bool{}
+
+	originList  = "*"
 )
 
 func init() {
@@ -32,10 +36,11 @@ func init() {
 	flag.BoolVar(&force, "force", force, "if true, files will be overwritten with identical content")
 	flag.StringVar(&dropZone, "drop-zone", dropZone, "root directory DropZone")
 	flag.StringVar(&defRoot, "definition-root", defRoot, "root directory of definitions")
+	flag.StringVar(&originList, "allow-origin", originList, "comma separated list of origins to share with or '*'")
 }
 
 
-func Initialize() error {
+func Initialize(origin string) error {
 	var err error = nil
 
 	if !initialized {
@@ -74,6 +79,15 @@ func Initialize() error {
 			log.Printf("   tmp dir:             '%s'\n", tmpDir)
 			log.Printf("   root of definitions: '%s'\n", defRoot)
 			log.Printf("Accepted subtrees:%s\n", subtrees)
+		}
+
+		if originList != "*" {
+		   	checkOrigin = true
+			allowOrigin[origin] = true;
+
+			for _, o := range strings.Split(originList, ",") {
+			    allowOrigin[strings.Trim(o, " \t")] = true
+			}
 		}
 	}
 

@@ -27,7 +27,7 @@ var (
 	dirError    = errors.New("not a directory")
 	fileError   = errors.New("invalid file")
 	attrError   = errors.New("extended file attribute error")
-	originError = errors.New("mismatching origins")
+	originError = errors.New("exclusive origins")
 	defError    = errors.New("definition file is missing or invalid")
 	lengthError = errors.New("only part could be written")
 	hashError   = errors.New("invalid file hash")
@@ -116,7 +116,7 @@ func CheckDirPath(confsPath string, create bool) (bool, *Error) {
 	return checkDirPath(subtree, entries, create)
 }
 
-func CheckFilePath(confsPath string, origin string, checkDir bool) (string, *Error) {
+func CheckFilePath(confsPath string, checkDir bool) (string, *Error) {
 	subtree, entries, err := splitPath(confsPath)
 
 	if err != nil {
@@ -140,8 +140,8 @@ func CheckFilePath(confsPath string, origin string, checkDir bool) (string, *Err
 		if !info.Mode().IsRegular() {
 			return "", newError(fileError, dropPath)
 		}
-		if len(origin) > 0 {
-			if o, err := getFileOrigin(dropPath); err == nil && o != origin {
+		if checkOrigin {
+			if o, err := getFileOrigin(dropPath); err != nil || !allowOrigin[o]  {
 				return "", newError(originError, dropPath)
 			}
 		}

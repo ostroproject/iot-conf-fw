@@ -9,9 +9,6 @@ import (
 	"ostro/confs"
 )
 
-const (
-	NeardOriginated = "Neard"
-)
 
 var (
 	wifiPath = "/local/device/wifi"
@@ -114,7 +111,7 @@ func handleWlanHandoverRequest(cred neard.Credentials) {
 	jsn += fmt.Sprintf("\"Security\":{\"Mode\":\"%s\",\"PreSharedKey\":\"%s\"}}", cred.AuthType, cred.Key)
 
 
-	if frag, err = confs.NewConfFragment(wifiPath, NeardOriginated, []byte(jsn)); err != nil {
+	if frag, err = confs.NewConfFragment(wifiPath, neard.NeardOriginated, []byte(jsn)); err != nil {
 		confs.Errorf("Failed to make ConfFragment (path:'%s', data:'%s'): %v", wifiPath, jsn, err)
 		return
 	}
@@ -138,7 +135,7 @@ func handleConfigData(data string) {
 		confs.Errorf("Failed to parse configuration data: '%s'", data)
 		return
 	}
-	if frag, err = confs.NewConfFragment(path, NeardOriginated, []byte(conf)); err != nil {
+	if frag, err = confs.NewConfFragment(path, neard.NeardOriginated, []byte(conf)); err != nil {
 		confs.Errorf("Failed to make ConfFragment (path:'%s', data:'%s'): %v", path, conf, err)
 		return
 	}

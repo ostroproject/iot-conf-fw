@@ -89,7 +89,7 @@ func (me *ConfFragment) traverseFragmentAndExport(Type, confsPath string, tree m
 	var ferr *Error
 	var dropPath string
 	
-	if dropPath, ferr = CheckFilePath(confsPath, me.origin, true); ferr == nil {
+	if dropPath, ferr = CheckFilePath(confsPath, true); ferr == nil {
 		var content []byte
 		var cerr error
 

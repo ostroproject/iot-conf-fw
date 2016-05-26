@@ -32,7 +32,7 @@ type Confs struct {
 }
 
 func Initialize() bool {
-	if err := confs.Initialize(); err != nil {
+	if err := confs.Initialize(TarOriginated); err != nil {
 		return false;
 	}
 

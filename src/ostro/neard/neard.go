@@ -9,6 +9,10 @@ import (
 	"ostro/confs"
 )
 
+const (
+	NeardOriginated = "Neard"
+)
+
 type ObjectInterface interface {
 	getObjectPath() string
 	storeProperties(props map[string]dbus.Variant) bool
@@ -58,7 +62,7 @@ var (
 )
 
 func Initialize() bool {
-	if err := confs.Initialize(); err != nil {
+	if err := confs.Initialize(NeardOriginated); err != nil {
 		return false
 	}
 
